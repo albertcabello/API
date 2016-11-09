@@ -55,6 +55,7 @@ class Handler {
             //echo 'Database username is not equal to username or database password is not equal to password<br>';
             return 0;
         }
+        mysqli_close($con);
 
     }
 }
