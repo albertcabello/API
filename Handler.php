@@ -40,8 +40,8 @@ class Handler {
         else { //$result does not exist
             die('Error, could not query database<br>');
         }
-        $dbUsername = ' ';
-        $dbPassword = ' ';
+        $dbUsername = '';
+        $dbPassword = '';
         while ($row = $result->fetch_row()) {
             $dbUsername .= $row[0];
             $dbPassword .= $row[1];
@@ -49,11 +49,11 @@ class Handler {
         //echo "Database User: $dbUsername, Database Password: $dbPassword<br>";
         if ($username === $dbUsername && $password === $dbPassword) {
             //echo 'Database username is equal to username and database password is equal to password<br>';
-            return 10;
+            return 1;
         }
         else {
             //echo 'Database username is not equal to username or database password is not equal to password<br>';
-            return -90;
+            return 0;
         }
 
     }
