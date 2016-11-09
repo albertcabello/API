@@ -20,26 +20,17 @@ class Handler {
     }
 
     /**
-     * @param $username the username to check against the database
-     * @param $password the password to check against the database
-     * @return bool; true if login matches, false otherwise
+     * @param $username string the username to check against the database
+     * @param $password string the password to check against the database
+     * @return int 1 if provided username and login match server, 0 if they don't match or username does not exist
      * This function inputs a username and password and checks them against the MySQL database.
      * If the username and password match what is in the database, return true, false otherwise.
      */
     function login($username, $password) {
-        // echo $username . ' ' . $password . '<br>';
-        //New MySQL connection
-        $con = mysqli_connect($this->host, $this->db_username, $this->db_password, $this->database);
-        //SQL statement to get the username and password that matches for a username
+        //SQL statement to execute
         $sql = "SELECT username, password FROM users WHERE username = '$username'";
-        //Do the query and store it in $result
-        $result = mysqli_query($con, $sql);
-        if ($result) { //$result exists
-            //echo 'No Error<br>';
-        }
-        else { //$result does not exist
-            die('Error, could not query database<br>');
-        }
+        //mysqli_result object returned by mySQLQuery()
+        $result = $this->mySQLQuery($sql);
         $dbUsername = '';
         $dbPassword = '';
         while ($row = $result->fetch_row()) {
@@ -49,13 +40,33 @@ class Handler {
         //echo "Database User: $dbUsername, Database Password: $dbPassword<br>";
         if ($username === $dbUsername && $password === $dbPassword) {
             //echo 'Database username is equal to username and database password is equal to password<br>';
+            //mysqli_close($con);
             return 1;
+
         }
         else {
             //echo 'Database username is not equal to username or database password is not equal to password<br>';
+            //®mysqli_close($con);
             return 0;
         }
-        mysqli_close($con);
+    }
 
+    /**
+     * @param $query string the desired query to perform on the mysql server
+     * @return mysqli_result the result from the mysql query
+     * This function inputs a string $query, a connection to the mySQL database is opened, the query is performed
+     * and then a mysqli_result object is returned that can be manipulated wherever this function was called
+     */
+    function mySQLQuery($query) {
+        //New MySQL connection
+        $con = mysqli_connect($this->host, $this->db_username, $this->db_password, $this->database);
+        //Do the query and store it in $result
+        $result = mysqli_query($con, $query); //This is a mysqli_result object
+        if ($result) {//$result exists
+            return $result;
+        }
+        else {//$result does not exist
+            die('Error, could not perform query');
+        }
     }
 }
