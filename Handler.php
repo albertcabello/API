@@ -39,7 +39,7 @@ class Handler {
         }
         else { //$result does not exist
             die('Error, could not query database<br>');
-        }
+        }//
 
     }
 }
