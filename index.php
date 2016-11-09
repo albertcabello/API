@@ -7,5 +7,5 @@
  */
  include 'Handler.php';
  $Test = new Handler();
- $Test->login('Alberto', 'Cabello');
+ echo "result: " $Test->login('Alberto', 'Cabello');
  ?>
