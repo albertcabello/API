@@ -46,7 +46,7 @@ class Handler {
         }
         else {
             //echo 'Database username is not equal to username or database password is not equal to password<br>';
-            //®mysqli_close($con);
+            //mysqli_close($con);
             return 0;
         }
     }
@@ -68,5 +68,13 @@ class Handler {
         else {//$result does not exist
             die('Error, could not perform query');
         }
+    }
+
+    /**
+     * @param $latitude double the latitude that will be used to find others near that latitude
+     * @param $longitude double the longitude that will be used to find others near that longitude †
+     */
+    function getNearbyUsers($latitude, $longitude) {
+
     }
 }
