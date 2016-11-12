@@ -13,6 +13,7 @@
  * Can set new coordinates for the user
  * Can retrieve the coordinates of the user
  */
+include 'VariousFunctions.php';
 class User
 {
     var $username;      //The username of the User
@@ -25,6 +26,8 @@ class User
      * @param $password string the password that should match database
      * If the provided username and password match database, then this will assign the username to the local variable
      * username allowing other functions to work.  Otherwise, the program dies.
+     * Initialize the long variable to the longitude stored in the database
+     * Initialize the lat variable to the longitude stored in the database
      */
     function __construct($username, $password) {
         //SQL statement to execute
@@ -50,6 +53,8 @@ class User
             //mysqli_close($con);
             die('Username and password did not match');
         }
+        $this->getLongitude();
+        $this->getLatitude();
     }
 
 
@@ -90,7 +95,7 @@ class User
      */
     function setCoordinates($latitude, $longitude) {
         //SQL statement to set latitude and longitude
-        $sql = "update users set longitude = $longitude, latitude = $latitude where username = 'Test2';";
+        $sql = "update users set longitude = $longitude, latitude = $latitude where username = $this->username;";
         //mysqli_result object returned by mySQLQuery()
         $result = VariousFunctions::mySQLQuery($sql);
         if ($result) {
@@ -99,13 +104,26 @@ class User
         else {
             return '0';
         }
-
-
     }
 
-
-
-
-
-
+    /**
+     * @return string returns the username and coordinates of users nearby the current user
+     */
+    function getNearbyUsers() {
+        $lowerLat = .9 * $this->lat;
+        $upperLat = 1.1 * $this->lat;
+        $lowerLong = .9 * $this->long;
+        $upperLong = 1.1 * $this->long;
+        //SQL statement to get nearby users that are withing ten percent of the longitude and latitude
+        $sql = "select username, longitude, latitude from users
+                where latitude between $lowerLat and $upperLat AND 
+                longitude between $lowerLong and $upperLong";
+        //mysqli_result object returned by mySQLQuery()
+        $result = VariousFunctions::mySQLQuery($sql);
+        $resultArray = array();
+        while ($row = $result->fetch_object()) {
+            array_push($resultArray, $row);
+        }
+        return json_encode($resultArray);
+    }
 }
