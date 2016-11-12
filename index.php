@@ -11,5 +11,8 @@ if (isset($_GET["userGiven"], $_GET["passGiven"])) {
 $userGiven = $_GET["userGiven"];
 $passGiven = $_GET["passGiven"];
 $testUser = new User($userGiven, $passGiven);
+echo $testUser->getLatitude() . '<br>';
+echo $testUser->getLongitude() . '<br>';
+echo $testUser->setCoordinates(1,1);
 }
- ?>
+?>

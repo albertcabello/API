@@ -6,11 +6,18 @@
  * Date: 11/9/16
  * Time: 8:22 PM
  */
+
+/**
+ * Class User
+ * Logs in the user if the given username and password when instantiated exists
+ * Can set new coordinates for the user
+ * Can retrieve the coordinates of the user
+ */
 class User
 {
     var $username;      //The username of the User
-    var $longitude;     //Longitude coordinate of the user
-    var $latitude;      //Latitude coordinate of the user
+    var $long;     //Longitude coordinate of the User
+    var $lat;      //Latitude coordinate of the User
 
     /**
      * User constructor.
@@ -35,7 +42,7 @@ class User
             //echo 'Database username is equal to username and database password is equal to password<br>';
             //mysqli_close($con);
             $this->username = $username;
-            echo('1');
+            echo('1<br>');
 
         }
         else {
@@ -45,17 +52,60 @@ class User
         }
     }
 
+
     /**
-     * @return mixed
+     * @return mixed string containing the latitudinal value for this User
      */
     function getLatitude() {
         //SQL statement to get latitude of the user
         $sql = "SELECT latitude FROM users WHERE username = '$this->username'";
-        //mysqli_result object returned by mySQLQuer()
+        //mysqli_result object returned by mySQLQuery()
         $result = VariousFunctions::mySQLQuery($sql);
-        $this->latitude = $result->fetch_field();
-        return $this->latitude;
+        while ($obj = $result->fetch_object()) {
+            $this->lat = $obj->latitude;
+        }
+        $result->close();
+        return $this->lat;
     }
+
+    /**
+     * @return mixed string containing the longitudinal value for this User
+     */
+    function getLongitude() {
+        //SQL statement to get longitude of the user
+        $sql = "SELECT longitude FROM users WHERE username = '$this->username'";
+        //mysqli_result object returned by mySQLQuery()
+        $result = VariousFunctions::mySQLQuery($sql);
+        while ($obj = $result->fetch_object()) {
+            $this->long = $obj->longitude;
+        }
+        $result->close();
+        return $this->long;
+    }
+
+    /**
+     * @param $latitude string the desired
+     * @param $longitude
+     * @return string
+     */
+    function setCoordinates($latitude, $longitude) {
+        //SQL statement to set latitude and longitude
+        $sql = "update users set longitude = $longitude, latitude = $latitude where username = 'Test2';";
+        //mysqli_result object returned by mySQLQuery()
+        $result = VariousFunctions::mySQLQuery($sql);
+        if ($result) {
+            return '1';
+        }
+        else {
+            return '0';
+        }
+
+
+    }
+
+
+
+
 
 
 }
