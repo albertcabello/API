@@ -71,7 +71,7 @@ class User
         }
         $result->close();
         return $this->lat;
-    }
+    }//
 
     /**
      * @return mixed string containing the longitudinal value for this User
