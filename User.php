@@ -115,9 +115,14 @@ class User
         $lowerLong = .9 * $this->long;
         $upperLong = 1.1 * $this->long;
         //SQL statement to get nearby users that are withing ten percent of the longitude and latitude
-        $sql = "select username, longitude, latitude from users
-                where latitude between $lowerLat and $upperLat AND 
-                longitude between $lowerLong and $upperLong";
+        $sql = "select username,latitude,longitude
+                from (
+                select username,latitude,longitude
+                from users 
+                where latitude between $lowerLat and $upperLat AND
+                      longitude between $lowerLong and $upperLong
+                ) AS result
+                where (NOT username = '$this->username');";
         //mysqli_result object returned by mySQLQuery()
         $result = VariousFunctions::mySQLQuery($sql);
         $resultArray = array();
