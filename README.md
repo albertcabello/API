@@ -10,3 +10,6 @@ Hello everyone!  This is my API for the Icebreaker App.  As of now, when you go 
 
 
 *I'm not entirely sure if the getNearbyUsers() method works for thousands of entries, it worked for the 3 I tried though :/
+
+#Bugs
+I need to change the getNearbyUsers() function to use an algorithm to return users within a square mile rather than anyone within 10% of my coordinates
