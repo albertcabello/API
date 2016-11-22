@@ -19,6 +19,7 @@ class User
     var $username;      //The username of the User
     var $long;     //Longitude coordinate of the User
     var $lat;      //Latitude coordinate of the User
+    var $loggedIn;
 
     /**
      * User constructor.
@@ -45,13 +46,14 @@ class User
             //echo 'Database username is equal to username and database password is equal to password<br>';
             //mysqli_close($con);
             $this->username = $username;
-            echo('1<br>');
+            $this->loggedIn = 1;
+
 
         }
         else {
             //echo 'Database username is not equal to username or database password is not equal to password<br>';
             //mysqli_close($con);
-            die('Username and password did not match');
+            $this->loggedIn = 0;
         }
         $this->getLongitude();
         $this->getLatitude();
@@ -110,16 +112,47 @@ class User
      * @return string returns the username and coordinates of users nearby the current user
      */
     function getNearbyUsers() {
-        $lowerLat = .9 * $this->lat;
-        $upperLat = 1.1 * $this->lat;
-        $lowerLong = .9 * $this->long;
-        $upperLong = 1.1 * $this->long;
+         
+        //Initialize the upper and lower longitude values
+
+        //Due to how MySQL works, the lesser negative value must be the first value in the between statement
+        //A mile in longitudinal degree is 1/(cos(lat) * miles at equator which is 69)
+        //Half a mile in longitudinal degrees is therefore 1/(2cos(lat) * 138)
+        //A mile in latitudinal degrees is 1/69
+        //Therefore half a mile in latitudinal degrees is 1/138
+
+        //Half mile latitude
+        $halfMileLat = 1/138;
+
+        //Half mile longitude
+        $halfMileLong = abs((1/((2 * cos($this->lat)) * 138)));
+
+        if ($this->long < 0) { //If the longitude is negative
+          $lowerLong = $this->long - $halfMileLong; //Make the more negative number the lower longitude
+          $upperLong = $this->long + $halfMileLong;
+          echo "Upper is: $upperLong, lower is $lowerLong <br>";
+        }
+        else { //Longitude is positive
+          $lowerLong = $this->long - $halfMileLong;
+          $upperLong = $this->long + $halfMileLong;
+            echo "Upper is: $upperLong, lower is $lowerLong <br>";
+        }
+        if ($this->lat < 0) { //If the latitude is negative
+          $lowerLat = $this->lat - $halfMileLat; //Make the more negative number the lower latitude
+          $upperLat = $this->lat + $halfMileLat;
+            echo "Upper is: $upperLat, lower is $lowerLat <br>";
+        }
+        else { //Latitude is positive
+          $lowerLat = $this->lat - $halfMileLat;
+          $upperLat = $this->lat + $halfMileLat;
+            echo "Upper is: $upperLat, lower is $lowerLat <br>";
+        }
         //SQL statement to get nearby users that are withing ten percent of the longitude and latitude
         $sql = "select username,latitude,longitude
                 from (
                 select username,latitude,longitude
-                from users 
-                where latitude between $lowerLat and $upperLat AND
+                from users
+                where latitude between $lowerLat and $upperLat and
                       longitude between $lowerLong and $upperLong
                 ) AS result
                 where (NOT username = '$this->username');";
