@@ -31,10 +31,11 @@ if ($action == "update") {
         echo '0';
      }
 }
+if ($action == "getPrefs") {
+    $prefsFor = $_GET["prefsFor"];
+    if ($user->loggedIn == 1) {
+        echo $user->getPrefs(searchedFor);
+    }
 
-
-
-
-
-
+}
 ?>

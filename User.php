@@ -59,6 +59,10 @@ class User
         $this->getLatitude();
     }
 
+    function getName() {
+        return $this->username;
+    }
+
 
     /**
      * @return mixed string containing the latitudinal value for this User
@@ -97,7 +101,7 @@ class User
      */
     function setCoordinates($latitude, $longitude) {
         //SQL statement to set latitude and longitude
-        $sql = "update users set longitude = $longitude, latitude = $latitude where username = $this->username;";
+        $sql = "update users set longitude = $longitude, latitude = $latitude where username = '$this->username'";
         //mysqli_result object returned by mySQLQuery()
         $result = VariousFunctions::mySQLQuery($sql);
         if ($result) {
@@ -130,22 +134,22 @@ class User
         if ($this->long < 0) { //If the longitude is negative
           $lowerLong = $this->long - $halfMileLong; //Make the more negative number the lower longitude
           $upperLong = $this->long + $halfMileLong;
-          echo "Upper is: $upperLong, lower is $lowerLong <br>";
+          //echo "Upper is: $upperLong, lower is $lowerLong <br>";
         }
         else { //Longitude is positive
           $lowerLong = $this->long - $halfMileLong;
           $upperLong = $this->long + $halfMileLong;
-            echo "Upper is: $upperLong, lower is $lowerLong <br>";
+            //echo "Upper is: $upperLong, lower is $lowerLong <br>";
         }
         if ($this->lat < 0) { //If the latitude is negative
           $lowerLat = $this->lat - $halfMileLat; //Make the more negative number the lower latitude
           $upperLat = $this->lat + $halfMileLat;
-            echo "Upper is: $upperLat, lower is $lowerLat <br>";
+            //echo "Upper is: $upperLat, lower is $lowerLat <br>";
         }
         else { //Latitude is positive
           $lowerLat = $this->lat - $halfMileLat;
           $upperLat = $this->lat + $halfMileLat;
-            echo "Upper is: $upperLat, lower is $lowerLat <br>";
+            //echo "Upper is: $upperLat, lower is $lowerLat <br>";
         }
         //SQL statement to get nearby users that are withing ten percent of the longitude and latitude
         $sql = "select username,latitude,longitude
@@ -164,4 +168,23 @@ class User
         }
         return json_encode($resultArray);
     }
+
+    /**
+     * Returns the preferences for a given user
+     * @param $user User object user that the username will be searched for in the mySQL database
+     * @return string json array of the preferences of the given user
+     */
+    function getPrefs($prefsFor) {
+        //SQL statement to get the preferences for the given user
+        $sql = "select * from preferences where username = '$prefsFor'";
+        $result = VariousFunctions::mySQLQuery($sql);
+        $resultArray = array();
+        while ($row = $result->fetch_object()) {
+            array_push($result, $row);
+        }
+        return json_encode($resultArray);
+    }
+
+
+
 }
