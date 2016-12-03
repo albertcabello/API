@@ -11,5 +11,4 @@ Hello everyone!  This is my API for the Icebreaker App.  As of now, when you go 
 
 
 
-#Bugs
-I need to change the getNearbyUsers() function to use an algorithm to return users within a square mile rather than anyone within 10% of my coordinates
+
