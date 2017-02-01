@@ -159,7 +159,7 @@ class User
                 where latitude between $lowerLat and $upperLat and
                       longitude between $lowerLong and $upperLong
                 ) AS result
-                where (NOT username = '$this->username');";
+                where (NOT username = '$this->username') limit 10;";
         //mysqli_result object returned by mySQLQuery()
         $result = VariousFunctions::mySQLQuery($sql);
         $resultArray = array();
