@@ -21,7 +21,7 @@ class VariousFunctions
      */
     static function mySQLQuery($query) {
         //New MySQL connection
-        $con = mysqli_connect('127.0.0.1', 'root', 'corvette', 'AppTestingUsers');
+        $con = mysqli_connect('127.0.0.1', 'acabello', '4kbllo56', 'AppTestingUsers');
         //Do the query and store it in $result
         $result = mysqli_query($con, $query); //This is a mysqli_result object
         if ($result) {//$result exists
