@@ -7,6 +7,7 @@
  */
 
 include 'User.php';
+include 'NewUser.php';
 $action = $_GET["action"];
 $userGiven = $_GET["userGiven"];
 $passGiven = $_GET["passGiven"];
@@ -38,4 +39,9 @@ if ($action == "getPrefs") {
     }
 
 }
+if ($action == "create") {
+	$emailGiven = $_GET["emailGiven"];
+	$create = new NewUser($userGiven, $passGiven, $emailGiven);
+}
+	
 ?>

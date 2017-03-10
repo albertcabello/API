@@ -13,7 +13,7 @@
  * Can set new coordinates for the user
  * Can retrieve the coordinates of the user
  */
-include 'VariousFunctions.php';
+require_once('VariousFunctions.php');
 class User
 {
     var $username;      //The username of the User
