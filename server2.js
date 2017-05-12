@@ -13,7 +13,7 @@ var schema = buildSchema(`
 
 	type User {
 		updateCoordinates(latitude: Int, longitude: Int): Boolean
-		print: String
+		getNearbyUsers: String
 	}
 
 	type Query {
