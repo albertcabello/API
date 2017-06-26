@@ -1,0 +1,49 @@
+<?php
+require_once('VariousFunctions.php');
+echo phpinfo();
+$target_dir = "images/";
+//If there are any errors, do not upload the file, if the file is multiple files, do not upload the file
+if(isset($_FILES["image"]["errors"]) || is_array($FILES["image"]["name"])) {
+	die("Couldn't upload file");
+}
+//If the image is not set, say it's empty
+if(!isset($_FILES["image"])) {
+	die("Empty");
+}
+//Initialize the file
+$file = $_FILES["image"]["tmp_name"];
+//Turn the file name into a random string
+$image = sha1_file($file);
+//Make it even more random
+$image = sha1(mt_rand().$image);
+//Create the path that will store them image
+$folder = $target_dir . substr($image, 0 , 3) . "/" . substr($image, 3, 6) . "/" . substr($image, 6, 9) . "/";
+if (!file_exists($folder)) {
+	mkdir($folder, 0777, true);
+}
+$finalDir = $folder.$image.".jpg";
+//Move the tmp file to the final directory
+if(!move_uploaded_file($_FILES["image"]["tmp_name"], $finalDir)) {
+	die("Could not upload file");
+}
+else {
+	echo "success";
+}
+//Tell the mysql server the location of the image
+$name = $_FILES["image"]["name"];
+$sql = "select * from images";
+$result = VariousFunctions::mySQLQuery($sql);
+if (!$result) {
+	echo mysqli_error();
+}
+if ($result->num_rows > 0) {
+	$sql = "update images set pathToImage='$finalDir' where username='$name'";
+	$result = VariousFunctions::mySQLQuery($sql);
+	echo !$result ? mysqli_error() : 'Updated image';
+}
+else {
+	$sql = "insert into images (username, pathToImage) values ('$name', '$finalDir')";
+	$result = VariousFunctions::mySQLQuery($sql);
+	echo !$result ? mysqli_error() : 'Added image';
+}
+?>
